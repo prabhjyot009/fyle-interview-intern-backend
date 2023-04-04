@@ -21,7 +21,7 @@ def ready():
 
     return response
 
-@app.errorhandler(Exception) # type: ignore
+@app.errorhandler(Exception)
 def handle_error(err):
     if isinstance(err, FyleError):
         return jsonify(
