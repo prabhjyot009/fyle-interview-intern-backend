@@ -1,3 +1,6 @@
+# Description: Test cases for student endpoints (GET, POST, PUT) for assignments (student/assignments) and submission (student/assignments/submit) for student 1 and student 2. The test cases, in order, are: 
+# 1. GET student/assignments 2. POST student/assignments 3. PUT student/assignments/submit
+
 # GET student/assignments
 def test_get_assignments_student_unauthorized(client):
     response = client.get('/student/assignments')

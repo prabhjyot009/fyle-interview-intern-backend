@@ -1,3 +1,4 @@
+#test for routes in core package
 def test_ready_route(client):
     response = client.get('/')
 

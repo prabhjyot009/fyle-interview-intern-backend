@@ -6,7 +6,7 @@ from core.models.teachers import Teacher
 from core.models.students import Student
 from sqlalchemy.types import Enum as BaseEnum
 
-
+# This is the model for the assignment table in the database. The assignment table is used to store the assignments that are submitted by the students and graded by the teachers.
 class GradeEnum(str, enum.Enum):
     A = 'A'
     B = 'B'

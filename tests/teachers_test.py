@@ -1,3 +1,6 @@
+# Description: Tests for teachers API endpoints (GET, POST, PUT) for assignments (teacher/assignments) and grading (teacher/assignments/grade) for teacher 1 and teacher 2. The test cases, in order, are:
+# 1. GET teacher/assignments 2. POST teacher/assignments 3. PUT teacher/assignments/grade
+
 # teacher/assignments tests
 def test_get_assignments_teacher_unauthorized(client):
     response = client.get('/teacher/assignments')

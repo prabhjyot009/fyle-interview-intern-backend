@@ -4,7 +4,7 @@ from marshmallow_enum import EnumField
 from core.models.assignments import Assignment, GradeEnum
 from core.libs.helpers import GeneralObject
 
-
+# this is the schema for the assignment model that is used in the student.py and teacher.py files in the core\apis\assignments folder to serialize and deserialize the assignment model object.
 class AssignmentSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Assignment

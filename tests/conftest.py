@@ -2,7 +2,7 @@ import pytest
 import json
 from tests import app
 
-
+#test fixtures for teachers_test.py and students_test.py files to use for testing purposes only
 @pytest.fixture
 def client():
     return app.test_client()
