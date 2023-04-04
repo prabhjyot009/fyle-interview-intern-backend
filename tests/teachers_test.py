@@ -43,6 +43,7 @@ def test_grade_assignment_cross(client, h_teacher_2):
     data = response.json
 
     assert data['error'] == 'FyleError'
+    assert data['message'] == 'Only the teacher submitted to can grade this assignment'
 
 
 def test_grade_assignment_bad_grade(client, h_teacher_1):
@@ -81,6 +82,7 @@ def test_grade_assignment_bad_assignment(client, h_teacher_1):
     data = response.json
 
     assert data['error'] == 'FyleError'
+    assert data['message'] == 'No assignment with id={assignment_id} was found'
 
 
 def test_grade_assignment_draft_assignment(client, h_teacher_1):
@@ -89,7 +91,8 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
     """
     response = client.post(
         '/teacher/assignments/grade',
-        headers=h_teacher_1, json={
+        headers=h_teacher_1
+        , json={
             "id": 2,
             "grade": "A"
         }
@@ -100,19 +103,38 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
 
     assert data['error'] == 'FyleError'
 
-
-def test_grade_assignment_teacher_1(client, h_teacher_1):
+def test_grade_assignment_submitted_assignment(client, h_teacher_1):
     response = client.post(
         '/teacher/assignments/grade',
-        headers=h_teacher_1,
-        json={
+        headers=h_teacher_1
+        , json={
             "id": 1,
             "grade": "A"
         }
     )
 
     assert response.status_code == 200
-
     data = response.json['data']
+
     assert data['grade'] == 'A'
+    assert data['teacher_id'] == 1
     assert data['state'] == 'GRADED'
+
+def test_grade_assignment_graded_assignment(client, h_teacher_1):
+    """
+    failure case: only a submitted assignment can be graded
+    """
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_1
+        , json={
+            "id": 1,
+            "grade": "B"
+        }
+    )
+
+    assert response.status_code == 400
+    data = response.json
+
+    assert data['error'] == 'FyleError'
+    assert data['message'] == 'Only submitted assignments can be awarded with grades'
