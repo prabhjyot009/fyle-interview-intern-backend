@@ -63,24 +63,23 @@ class Assignment(db.Model):
     def submit(cls, _id, teacher_id, principal: Principal):
         assignment = Assignment.get_by_id(_id)
         assertions.assert_found(assignment, 'No assignment with this id was found')
-        assertions.assert_valid(assignment.student_id == principal.student_id, 'This assignment belongs to other student')
-        assertions.assert_valid(assignment.content is not None, 'Empty assignment cannot be submitted')
-        assertions.assert_valid(assignment.state == AssignmentStateEnum.DRAFT, 'Only draft assignment can be submitted')
+        assertions.assert_valid(assignment.student_id == principal.student_id, 'This assignment belongs to some other student')
+        assertions.assert_valid(assignment.content is not None, 'assignment with empty content cannot be submitted')
+        assertions.assert_valid(assignment.state is not AssignmentStateEnum.SUBMITTED, 'only a draft assignment can be submitted')
 
         assignment.teacher_id = teacher_id
         assignment.state = AssignmentStateEnum.SUBMITTED
         db.session.flush()
 
-        return assignment   
-
+        return assignment
+    
     @classmethod
-    def grade_assignment(cls, assignment_id, grade, principal: Principal):
-        assignment = Assignment.get_by_id(assignment_id)
-        assertions.assert_found(assignment, 'No assignment with id={assignment_id} was found')
-        assertions.assert_valid(assignment.state == AssignmentStateEnum.SUBMITTED, 'Only submitted assignments can be awarded with grades')
-        assertions.assert_valid(assignment.teacher_id == principal.teacher_id, 'Only the teacher submitted to can grade this assignment')
+    def grade_me(cls, _id, grade_val, principal: Principal):
+        assignment = Assignment.get_by_id(_id)
+        assertions.assert_found(assignment, 'No assignment with this id was found')
+        assertions.assert_valid(assignment.teacher_id == principal.teacher_id, 'This assignment is submitted to another teacher')
 
-        assignment.grade = grade
+        assignment.grade = grade_val
         assignment.state = AssignmentStateEnum.GRADED
         db.session.flush()
 
@@ -90,7 +89,6 @@ class Assignment(db.Model):
     def get_assignments_by_student(cls, student_id):
         return cls.filter(cls.student_id == student_id).all()
     
-    """This method filters and returns all the assignments using the teacher_id"""
     @classmethod
     def get_assignments_by_teacher(cls, teacher_id):
         return cls.filter(cls.teacher_id == teacher_id).all()
