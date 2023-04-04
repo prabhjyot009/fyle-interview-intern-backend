@@ -126,6 +126,7 @@ def test_submit_draft_assignment_student_2(client, h_student_2):
             'id': data['id'],
             'teacher_id': 2
         })
+    
     assert response.status_code == 200
     data = response.json['data']
     assert data['student_id'] == 2
